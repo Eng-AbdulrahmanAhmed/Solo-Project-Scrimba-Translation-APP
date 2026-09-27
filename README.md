@@ -1,21 +1,31 @@
 # Scrimba Solo Project - Translation App
 
-A full-stack translation application currently in development. The goal of this app is to take user input and translate it into different languages (French, Spanish, or Japanese). 
+A full-stack, AI-powered translation application. This app takes user input and translates it into French, Spanish, or Japanese using a custom Express backend connected to the OpenRouter API.
 
-## 🚧 Current Progress
-- **Frontend**: Scaffolded using React, TypeScript, and Vite. The basic UI is built, including text input areas, language selection radio buttons (with flags), and state toggling between the selection view and the result view.
-- **Backend**: An Express.js server is set up to handle API requests on port 3001, with CORS configured to communicate with the frontend.
+## ✨ Features
+- **Frontend**: Built with React, TypeScript, and Vite. Features a dynamic UI with text input, language selection via radio buttons (with flags), and seamless state toggling between the input view and the translated result view.
+- **Backend**: An Express.js server configured with CORS that securely handles API requests.
+- **AI Integration**: Uses the official `openai` Node SDK to communicate with OpenRouter's API, dynamically injecting the user's selected language into the system prompt for highly accurate translations.
 
 ## 🚀 Getting Started
 
-### 1. Backend Setup
+### 1. Environment Setup
+Before running the backend, create a `.env` file inside the `BackEnd` folder with your API credentials:
+```env
+PORT=3001
+OPENROUTER_API_KEY=your_actual_api_key_here
+BASE_URL=https://openrouter.ai/api/v1
+MODEL=meta-llama/llama-3-8b-instruct:free
+```
+
+### 2. Backend Setup
 ```bash
 cd BackEnd
 npm install
 npm run dev # Runs server on http://localhost:3001
 ```
 
-### 2. Frontend Setup
+### 3. Frontend Setup
 ```bash
 cd FrontEnd/Translation-App
 npm install
