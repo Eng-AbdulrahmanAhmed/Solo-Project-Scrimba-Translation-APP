@@ -3,14 +3,17 @@ import  japaneseFlag from "./assets/jpn-flag.png"
 import  frenchFlag from "./assets/fr-flag.png"
 import  spanishFlag from "./assets/sp-flag.png"
 import { useState , useRef } from "react";
+// import { marked } from "marked";
+// import DOMPurify from "dompurify";
 
 type TranslateResponse = { translation: string };
 
 export function MainComponent():JSX.Element{
 
     const [state, setState] = useState<"select" | "result">("select");
-
+    const [language , setLanguage] = useState<string>('French')
     const textAreaRef = useRef<HTMLTextAreaElement>(null)
+    const [translationText , setTranslationText] = useState("")
 
     function toggleState(): void {
         setState(prev => prev === "select" ? "result" : "select");
@@ -18,20 +21,19 @@ export function MainComponent():JSX.Element{
 
     async function sendApi():Promise<void> {
         try {
-             const response = await fetch("http://localhost:3001/api/translate" , {
+            const response = await fetch("http://localhost:3001/api/translate" , {
             method:"POST" ,
             headers: {
                 "Content-Type" : "application/json" 
             },
-            body: JSON.stringify({text : textAreaRef.current?.value})
+            body: JSON.stringify({text : textAreaRef.current?.value , languageSelected : language })
         })
         const data:TranslateResponse = await response.json()
         console.log(data)
+        setTranslationText(data.translation)
         } catch (error) {
             console.log(error)
         }
-        
-       
     }
     return(
         <main>
@@ -48,23 +50,23 @@ export function MainComponent():JSX.Element{
                     <>
                         <div className="language-options">
                             <label className="lang-radio">
-                                <input type="radio" defaultChecked name="radio" />
+                                <input type="radio" defaultChecked name="radio" onChange={(e)=> setLanguage(e.target.value)} value="french"/>
                                 <span className="checkmark">
                                 </span>
-                                Arabic
+                                French
                                     <img src={frenchFlag} alt="" />
                             </label>
                             <label className="lang-radio">
                                 <span className="checkmark">
                                 </span>
-                                <input type="radio" name="radio" />
-                                Spainsh
+                                <input type="radio" name="radio" onChange={(e)=> setLanguage(e.target.value)} value="spanish"/>
+                                Spanish
                                     <img src={spanishFlag} alt="" />
                             </label>
                             <label className="lang-radio">
                                 <span className="checkmark">
                                 </span>
-                                <input type="radio" name="radio" />
+                                <input type="radio" onChange={(e)=> setLanguage(e.target.value)} name="radio" value="japanese"/>
                                 Japanese
                                     <img src={japaneseFlag} alt="" />
                             </label>
@@ -76,14 +78,13 @@ export function MainComponent():JSX.Element{
                     </> :
                     <>
                         <div className="translation-textarea">
-                            <textarea name="translation" id=""   placeholder="Your Translation"></textarea>
+                            <textarea name="translation" id="translation-areatext" value={translationText} placeholder="Your Translation"></textarea>
                         </div>
                         <div className="btn-container">
-                            <button className="translate-btn" onClick={toggleState}>Start Over</button>
+                            <button className="translate-btn" onClick={()=>{toggleState();setTranslationText(" ") }}>Start Over</button>
                         </div>
                     </>
                 }
-                
             </div>
         </main>
     )
